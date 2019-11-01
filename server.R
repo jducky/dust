@@ -48,7 +48,7 @@ function(input, output, session) {
     # Add names, so that we can add all=0
     names(routeNums) <- routeNums
     routeNums <- c(All = 0, routeNums)
-    selectInput("routeNum", "Route", choices = routeNums, selected = routeNums[2])
+    selectInput("routeNum", "대상지역(구)", choices = routeNums, selected = routeNums[2])
   })
   
   # Locations of all active vehicles
@@ -156,10 +156,10 @@ function(input, output, session) {
     locations <- routeVehicleLocations()
     if (length(locations) == 0)
       return(NULL)
-    
+
     # Show only selected directions
     locations <- filter(locations, Direction %in% as.numeric(input$directions))
-    
+
     # Four possible directions for bus routes
     dirPal <- colorFactor(dirColors, names(dirColors))
     

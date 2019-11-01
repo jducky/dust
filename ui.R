@@ -8,8 +8,8 @@ dashboardPage(
     ),
     sidebarMenu(
       menuItem("미세먼지예측", tabName = "dashboard"),
-      menuItem("미세먼지GIS", tabName = "gismap"),
-      menuItem("데이터처리", tabName = "rawdata")
+      menuItem("데이터처리", tabName = "rawdata"),
+      menuItem("미세먼지GIS", tabName = "gismap")
     )
   ),
   dashboardBody(
@@ -21,16 +21,45 @@ dashboardPage(
           valueBoxOutput("users")
         ),
         fluidRow(
-          box(
-            width = 8, status = "info", solidHeader = TRUE,
-            title = "서울시 미세먼지 지도 (last 5 min)",
-            leafletOutput("busmap", height = 700)
-          ),
-          box(
-            width = 4, status = "info",
-            title = "구별 미세먼지 농도 순위",
-            tableOutput("packageTable")
-          )
+          column(8,
+                 box(width = NULL, collapsible = T,
+                   status = "info", solidHeader = TRUE,
+                   title = "서울시 미세먼지 지도 (last 5 min)",
+                   leafletOutput("busmap", height = 700)
+                   )
+                 ),
+          column(4,
+                 box(width = NULL, status = "warning",
+                     collapsible = T, solidHeader = F,
+                     title = "대상지역선택(금천구)",
+                     uiOutput("routeSelect"),
+                     checkboxGroupInput("directions", "Show",
+                                        choices = c(
+                                          유치원 = 4,
+                                          초중고 = 1,
+                                          인구밀집지역 = 2,
+                                          구청 = 3
+                                        ),
+                                        selected = c(1, 2, 3, 4)
+                     ),
+                     p(
+                       class = "text-muted",
+                       paste("Note: a route number can have several different trips, each",
+                             "with a different path. Only the most commonly-used path will",
+                             "be displayed on the map."
+                       )
+                     ),
+                     actionButton("zoomButton", "Zoom to fit AREA")
+                 ),
+                 box(width = NULL, 
+                     status = "info",
+                     collapsible = T, solidHeader = F,
+                     title = "구별 미세먼지 농도 순위",
+                     tableOutput("packageTable")
+                 )
+              )
+          
+          
         )
       ),
       tabItem("gismap",
@@ -41,26 +70,26 @@ dashboardPage(
                        )
                 ),
                 column(width = 3,
-                       box(width = NULL, status = "warning",
-                           uiOutput("routeSelect"),
-                           checkboxGroupInput("directions", "Show",
-                                              choices = c(
-                                                Northbound = 4,
-                                                Southbound = 1,
-                                                Eastbound = 2,
-                                                Westbound = 3
-                                              ),
-                                              selected = c(1, 2, 3, 4)
-                           ),
-                           p(
-                             class = "text-muted",
-                             paste("Note: a route number can have several different trips, each",
-                                   "with a different path. Only the most commonly-used path will",
-                                   "be displayed on the map."
-                             )
-                           ),
-                           actionButton("zoomButton", "Zoom to fit buses")
-                       ),
+                       # box(width = NULL, status = "warning",
+                       #     uiOutput("routeSelect"),
+                       #     checkboxGroupInput("directions", "Show",
+                       #                        choices = c(
+                       #                          Northbound = 4,
+                       #                          Southbound = 1,
+                       #                          Eastbound = 2,
+                       #                          Westbound = 3
+                       #                        ),
+                       #                        selected = c(1, 2, 3, 4)
+                       #     ),
+                       #     p(
+                       #       class = "text-muted",
+                       #       paste("Note: a route number can have several different trips, each",
+                       #             "with a different path. Only the most commonly-used path will",
+                       #             "be displayed on the map."
+                       #       )
+                       #     ),
+                       #     actionButton("zoomButton", "Zoom to fit buses")
+                       # ),
                        box(width = NULL, status = "warning",
                            selectInput("interval", "Refresh interval",
                                        choices = c(
